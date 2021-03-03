@@ -57,6 +57,7 @@ const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 
 const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === 'true';
 const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === 'true';
+const useTypescriptIncrementalApi = process.env.FORK_TS_INCREMENTAL_API === 'true'
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
@@ -752,6 +753,7 @@ module.exports = function (webpackEnv) {
           silent: true,
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
+          useTypescriptIncrementalApi
         }),
       !disableESLintPlugin &&
         new ESLintPlugin({
@@ -769,14 +771,6 @@ module.exports = function (webpackEnv) {
           // ESLint class options
           cwd: paths.appPath,
           resolvePluginsRelativeTo: __dirname,
-          baseConfig: {
-            extends: [require.resolve('eslint-config-react-app/base')],
-            rules: {
-              ...(!hasJsxRuntime && {
-                'react/react-in-jsx-scope': 'error',
-              }),
-            },
-          },
         }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
