@@ -55,7 +55,6 @@ const reactRefreshOverlayEntry = require.resolve(
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 
-const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === 'true';
 const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === 'true';
 const useTypescriptIncrementalApi = process.env.FORK_TS_INCREMENTAL_API === 'true'
 
@@ -761,7 +760,7 @@ module.exports = function (webpackEnv) {
           extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
           formatter: require.resolve('react-dev-utils/eslintFormatter'),
           eslintPath: require.resolve('eslint'),
-          failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
+          failOnError: isEnvProduction,
           context: paths.appSrc,
           cache: true,
           cacheLocation: path.resolve(
